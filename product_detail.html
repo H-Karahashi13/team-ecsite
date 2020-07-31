@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<link href="/css/reset.css" th:href="@{/css/reset.css}" rel="stylesheet" />
+<link href="/css/style.css" th:href="@{/css/style.css}" rel="stylesheet" />
+<title>SKY.com</title>
+</head>
+<body>
+<header th:insert="fragments/page_header::pageHeader"></header>
+
+<main>
+	<div class="container">
+		<table class="top">
+			<caption><label th:text="${itemDetail.productName}"></label> (<label th:text = "${itemDetail.productNameKana}"></label>)</caption>
+			<tr>
+				<th>画像</th><th>価格</th><th>発売元</th><th>発売年月日</th>
+			</tr>
+			<tr>
+				<td class="imageDetail">
+					<img class="itemImageDetail" th:src="@{{imagePath} (imagePath=${itemDetail.imageFullPath}) }" alt="商品画像" />
+				</td>
+				<td class="number" th:text="${itemDetail.price} + '円'"></td>
+				<td th:text="${itemDetail.releaseCompany}"/>
+				<td th:text="${itemDetail.releaseDate}"/>
+			</tr>
+		</table>
+			<label id="description">商品説明</label>
+			<textarea cols="75" rows="5" readonly th:text="${itemDetail.productDescription}"></textarea>
+			<hr/>
+	    <form>
+			<div class="buttonArea">
+				<label>購入個数</label>
+				<input type="number" id = "productCount" class="count number"  name="productCount" value="0" min = "0" step = "1"/>
+				<input type="hidden" name="productId" th:value="${itemDetail.id}"/>
+				<button class="cartButton">カートに追加</button>
+			</div>
+		</form>
+	</div>
+</main>
+
+<script>
+$(() => {
+	$('.cartButton').on('click', () => {
+		let productCount = $('#productCount').val();
+		
+		if (productCount == 0) {
+			alert("個数が0です。");
+			return;
+		}
+		
+		$('form').attr('action', '/sky/cart/add');
+		$('form').submit();
+	});
+});
+</script>
+</body>
+</html>
